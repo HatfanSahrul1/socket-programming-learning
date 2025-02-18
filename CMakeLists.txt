@@ -9,3 +9,8 @@ target_link_libraries(server pthread)
 add_executable(client tcp/client_simple.cpp)
 target_link_libraries(client pthread)
 
+add_executable(udp_server udp/udp_server.cpp)
+target_link_libraries(udp_server pthread)
+
+add_executable(udp_client udp/udp_client.cpp)
+target_link_libraries(udp_client pthread)
