@@ -13,16 +13,15 @@
 int main(){
     int sockfd;
     char buffer[MAXLINE];
-    const char* hello = "helo dari server";
-    struct sockaddr_in servaddr, cliaddr;
+    const char* hello = "helo dari client";
+    struct sockaddr_in servaddr;
 
-    if((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0){
+    if( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0){
         perror("socket creation failed");
         exit(EXIT_FAILURE);
     }
 
     memset(&servaddr, 0, sizeof(servaddr));
-    memset(&cliaddr, 0, sizeof(cliaddr));
 
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = INADDR_ANY;
@@ -36,18 +35,12 @@ int main(){
     socklen_t len;
     int n;
 
-    len = sizeof(cliaddr);
+    sendto(sockfd, (const char *)hello, strlen(hello), MSG_CONFIRM, (const struct sockaddr *) &servaddr, len);
 
-    n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL,
-                 (struct sockaddr *) &cliaddr, &len);
+    n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, (struct sockaddr *) &servaddr, &len);
 
     buffer[n] = '\0';
-    printf("client : %s\n", buffer);
-
-    sendto(sockfd, (const char *)hello, strlen(hello), MSG_CONFIRM, 
-                (const struct sockaddr *) &cliaddr, len);
-
-    std::cout<<"send"<<std::endl;
+    std::cout<<"data : "<<buffer<<std::endl;
 
     return 0;
 }
